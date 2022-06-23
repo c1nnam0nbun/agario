@@ -1,20 +1,32 @@
 {
-	"name": "Server",
+	"name": "agario",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"workspaces": [
+		"auth_server",
+		"room_server",
+		"game_server"
+	],
 	"scripts": {
-		"start": "nodemon index.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "concurrently --kill-others \"npm run room_server\" \"npm run auth_server\" \"npm run game_server\"",
+		"auth_server": "npm run start -w auth_server",
+		"room_server": "npm run start -w room_server",
+		"game_server": "npm run start -w game_server"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"dependencies": {
-		"uuid": "^8.3.2",
-		"ws": "^8.4.0"
-	},
 	"devDependencies": {
-		"nodemon": "^2.0.15"
+		"jest": "^28.1.1",
+		"nodemon": "^2.0.16"
+	},
+	"dependencies": {
+		"axios": "^0.27.2",
+		"body-parser": "^1.20.0",
+		"concurrently": "^7.2.2",
+		"cors": "^2.8.5",
+		"express": "^4.18.1",
+		"uuid": "^8.3.2",
+		"ws": "^8.6.0"
 	}
 }

@@ -16,6 +16,10 @@ let timeDiv, resultsDiv;
 
 let reconnect = false;
 
+const baseApi = "http://localhost:16001"
+const connectEndpoint = baseApi + "/connect"
+const disconnectEndpoint = baseApi + "/disconnect"
+
 function connect() {
 	ws = new WebSocket("ws://localhost:16000");
 
@@ -27,9 +31,7 @@ function connect() {
 		const data = JSON.parse(e.data);
 
 		if (data.type === "roomFound") {
-			socketId = data.playerID;
-			roomId = data.roomId;
-
+			console.log(data);
 			player = new Blob(
 				data.position.x,
 				data.position.y,
@@ -216,15 +218,30 @@ function setup() {
 
 	let button = createButton("Start!");
 	button.style("margin-top", "15px");
-	button.mouseClicked(() => {
+	button.mouseClicked(async () => {
 		username = input.value();
 		if (username === "") return;
-		ws.send(
-			JSON.stringify({
-				type: "connect",
-				username,
-			})
-		);
+
+		const resp = await fetch(connectEndpoint, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({username})
+		})
+
+		const data = await resp.json()
+
+		socketId = data.id;
+		roomId = data.roomId;
+
+		
+		ws.send(JSON.stringify({
+            type: "connect",
+            username,
+            ...data
+        }))
+
 		userDiv.remove();
 	});
 	userDiv.child(button);
@@ -302,5 +319,12 @@ setInterval(() => {
 
 setInterval(() => {}, 1000);
 
-window.onbeforeunload = () =>
-	ws.send(JSON.stringify({ type: "close", id: socketId, roomId }));
+window.onbeforeunload = async () => {
+	await fetch(disconnectEndpoint, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({ socketId, roomId })
+	})
+}
