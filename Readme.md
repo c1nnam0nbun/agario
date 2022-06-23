@@ -6,5 +6,5 @@ The idea is that there are three distinct servers implementing some parts of app
 - game_server: responsible for regular game world updates, such as players' positions, sizes etc. game_server is WebSocket server, which exchanges messages with players
 
 To start the game, clone the repository and run **npm run start** to start all servers simultaneously or npm run **&lt;game/room/auth&gt;_server** to start servers separately.  
-**NOTE**: as servers need to communicate between them, the order should be **room_server->auth_server->game_server**
-When servers are running, open [](index.html) in browser to start playing.
+**NOTE**: as servers need to communicate between them, the order should be **room_server->auth_server->game_server**  
+When servers are running, open [index.html](index.html) in browser to start playing.
