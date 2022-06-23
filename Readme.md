@@ -15,6 +15,7 @@ to start all servers simultaneously or
 
 > npm run &lt;game/room/auth&gt;_server
 
-to start servers separately.  
+to start servers separately.
+
 **NOTE**: as servers need to communicate between them, the order should be **room_server->auth_server->game_server**  
 When servers are running, open [index.html](index.html) in browser to start playing.
